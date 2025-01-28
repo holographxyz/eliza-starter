@@ -35,6 +35,8 @@ export const wait = (minTime: number = 1000, maxTime: number = 3000) => {
 
 let nodePlugin: any | undefined;
 
+console.log("envs", process.env)
+
 export function createAgent(
   character: Character,
   db: any,
