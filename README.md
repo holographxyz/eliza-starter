@@ -88,3 +88,9 @@ services:
 ```bash
 docker compose -f docker-compose-image.yaml up
 ```
+
+
+## Build and Push Docker image
+
+1. `docker build --platform linux/amd64 -t container_name . `
+2. `docker run -it --env-file=.env -p 3000:3000 container_name` 
