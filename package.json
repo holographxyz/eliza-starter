@@ -10,7 +10,8 @@
     "clean": "./scripts/clean.sh",
     "start:service:eliza": "pm2 start pnpm --name=\"eliza\" --restart-delay=3000 --max-restarts=10 -- run start",
     "stop:service:eliza": "pm2 stop eliza",
-    "start:runtime": "pm2-runtime start ecosystem.config.js --env production"
+    "start:runtime": "pm2-runtime start ecosystem.config.js --env production",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@elizaos/adapter-postgres": "0.1.7",
@@ -29,6 +30,12 @@
     "ws": "8.18.0",
     "yargs": "17.7.2"
   },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "ts-node": "10.9.2",
+    "tsup": "8.3.5",
+    "typescript": "5.6.3"
+  },
   "engines": {
     "node": ">=22"
   },
@@ -36,10 +43,5 @@
     "overrides": {
       "onnxruntime-node": "1.20.0"
     }
-  },
-  "devDependencies": {
-    "ts-node": "10.9.2",
-    "tsup": "8.3.5",
-    "typescript": "5.6.3"
   }
 }

@@ -4,12 +4,9 @@
 // import { TwitterClientInterface } from '@elizaos/client-twitter';
 import { Character, IAgentRuntime } from '@elizaos/core';
 
-export async function initializeClients(
-  character: Character,
-  runtime: IAgentRuntime
-) {
+export async function initializeClients(character: Character, runtime: IAgentRuntime) {
   const clients = [];
-  const clientTypes = character.clients?.map((str) => str.toLowerCase()) || [];
+  const clientTypes = character.clients?.map(str => str.toLowerCase()) || [];
 
   // NOTE: Disabling clients that are not being used
   // if (clientTypes.includes("auto")) {
