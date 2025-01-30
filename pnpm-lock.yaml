@@ -4,12 +4,27 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  onnxruntime-node: 1.20.0
-
 importers:
 
   .:
+    devDependencies:
+      prettier:
+        specifier: ^3.4.2
+        version: 3.4.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.10.6)(typescript@5.6.3)
+      tsup:
+        specifier: ^8.3.5
+        version: 8.3.5(postcss@8.5.1)(typescript@5.6.3)(yaml@2.7.0)
+      turbo:
+        specifier: ^1.11.3
+        version: 1.13.4
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+
+  packages/eliza-starter:
     dependencies:
       '@elizaos/adapter-postgres':
         specifier: 0.1.7
@@ -44,9 +59,6 @@ importers:
       path:
         specifier: 0.12.7
         version: 0.12.7
-      prettier:
-        specifier: ^3.4.2
-        version: 3.4.2
       readline:
         specifier: 1.3.0
         version: 1.3.0
@@ -60,6 +72,9 @@ importers:
         specifier: 17.7.2
         version: 17.7.2
     devDependencies:
+      prettier:
+        specifier: ^3.4.2
+        version: 3.4.2
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@22.10.6)(typescript@5.6.3)
@@ -570,7 +585,7 @@ packages:
   '@echogarden/transformers-nodejs-lite@2.17.1-lite.3':
     resolution: {integrity: sha512-qD9kvrL1xmce0iiiNEyqq2GW1qoksqvdOpww3Gsgqx/O9tdU/M2R78fji9opY+QU9u8OKH9L+ZzsOQdF5FixZA==}
     peerDependencies:
-      onnxruntime-node: 1.20.0
+      onnxruntime-node: '*'
 
   '@elizaos/adapter-postgres@0.1.7':
     resolution: {integrity: sha512-qPkM3umNa7+URIuqOxfN7zYURrEdTt9/+JRMSeZQOQ+vG6sSiiuv4MzNm75DCfw1yG4bHSBv+omYnWlJhOGSHg==}
@@ -601,7 +616,7 @@ packages:
   '@elizaos/plugin-node@0.1.7':
     resolution: {integrity: sha512-VpRZZTsyy4KGdu0ZF/T6Z6APPn4QRILxtyAzxrRsSi1Helj7xYSeTTIVj2ZfVMM2gkOdo8YZE4Zu4+Gt22rukQ==}
     peerDependencies:
-      onnxruntime-node: 1.20.0
+      onnxruntime-node: 1.20.1
       whatwg-url: 7.1.0
 
   '@emnapi/runtime@1.3.1':
@@ -3859,11 +3874,25 @@ packages:
     resolution: {integrity: sha512-VXJjc87FScF88uafS3JllDgvAm+c/Slfz06lorj2uAY34rlUu0Nt+v8wreiImcrgAjjIHp1rXpTDlLOGw29WwQ==}
     engines: {node: '>=18'}
 
+  onnxruntime-common@1.15.1:
+    resolution: {integrity: sha512-Y89eJ8QmaRsPZPWLaX7mfqhj63ny47rSkQe80hIo+lvBQdrdXYR9VO362xvZulk9DFkCnXmGidprvgJ07bKsIQ==}
+
+  onnxruntime-common@1.19.2:
+    resolution: {integrity: sha512-a4R7wYEVFbZBlp0BfhpbFWqe4opCor3KM+5Wm22Az3NGDcQMiU2hfG/0MfnBs+1ZrlSGmlgWeMcXQkDk1UFb8Q==}
+
   onnxruntime-common@1.20.0:
     resolution: {integrity: sha512-9ehS4ul5fBszIcHhfxuDgk45lO+Fqrxmrgwk1Pxb1JRvbQiCB/v9Royv95SRCWHktLMviqNjBsEd/biJhd39cg==}
 
   onnxruntime-common@1.20.0-dev.20241016-2b8fc5529b:
     resolution: {integrity: sha512-KZK8b6zCYGZFjd4ANze0pqBnqnFTS3GIVeclQpa2qseDpXrCQJfkWBixRcrZShNhm3LpFOZ8qJYFC5/qsJK9WQ==}
+
+  onnxruntime-node@1.15.1:
+    resolution: {integrity: sha512-wzhVELulmrvNoMZw0/HfV+9iwgHX+kPS82nxodZ37WCXmbeo1jp3thamTsNg8MGhxvv4GmEzRum5mo40oqIsqw==}
+    os: [win32, darwin, linux]
+
+  onnxruntime-node@1.19.2:
+    resolution: {integrity: sha512-9eHMP/HKbbeUcqte1JYzaaRC8JPn7ojWeCeoyShO86TOR97OCyIyAIOGX3V95ErjslVhJRXY8Em/caIUc0hm1Q==}
+    os: [win32, darwin, linux]
 
   onnxruntime-node@1.20.0:
     resolution: {integrity: sha512-mjLge++8WHfyCZ4IqZ1FbUbtFAfGht7BLCkOeBL1L9PFV27YHwluXkNt7m0Pgf6TR2P5pqVZsD3zqFbFP6QTMw==}
@@ -4950,6 +4979,40 @@ packages:
 
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
+
+  turbo-darwin-64@1.13.4:
+    resolution: {integrity: sha512-A0eKd73R7CGnRinTiS7txkMElg+R5rKFp9HV7baDiEL4xTG1FIg/56Vm7A5RVgg8UNgG2qNnrfatJtb+dRmNdw==}
+    cpu: [x64]
+    os: [darwin]
+
+  turbo-darwin-arm64@1.13.4:
+    resolution: {integrity: sha512-eG769Q0NF6/Vyjsr3mKCnkG/eW6dKMBZk6dxWOdrHfrg6QgfkBUk0WUUujzdtVPiUIvsh4l46vQrNVd9EOtbyA==}
+    cpu: [arm64]
+    os: [darwin]
+
+  turbo-linux-64@1.13.4:
+    resolution: {integrity: sha512-Bq0JphDeNw3XEi+Xb/e4xoKhs1DHN7OoLVUbTIQz+gazYjigVZvtwCvgrZI7eW9Xo1eOXM2zw2u1DGLLUfmGkQ==}
+    cpu: [x64]
+    os: [linux]
+
+  turbo-linux-arm64@1.13.4:
+    resolution: {integrity: sha512-BJcXw1DDiHO/okYbaNdcWN6szjXyHWx9d460v6fCHY65G8CyqGU3y2uUTPK89o8lq/b2C8NK0yZD+Vp0f9VoIg==}
+    cpu: [arm64]
+    os: [linux]
+
+  turbo-windows-64@1.13.4:
+    resolution: {integrity: sha512-OFFhXHOFLN7A78vD/dlVuuSSVEB3s9ZBj18Tm1hk3aW1HTWTuAw0ReN6ZNlVObZUHvGy8d57OAGGxf2bT3etQw==}
+    cpu: [x64]
+    os: [win32]
+
+  turbo-windows-arm64@1.13.4:
+    resolution: {integrity: sha512-u5A+VOKHswJJmJ8o8rcilBfU5U3Y1TTAfP9wX8bFh8teYF1ghP0EhtMRLjhtp6RPa+XCxHHVA2CiC3gbh5eg5g==}
+    cpu: [arm64]
+    os: [win32]
+
+  turbo@1.13.4:
+    resolution: {integrity: sha512-1q7+9UJABuBAHrcC4Sxp5lOqYS5mvxRrwa33wpIyM18hlOCpRD/fTJNxZ0vhbMcJmz15o9kkVm743mPn7p6jpQ==}
+    hasBin: true
 
   tv4@1.3.0:
     resolution: {integrity: sha512-afizzfpJgvPr+eDkREK4MxJ/+r8nEEHcmitwgnPUqpaP+FpwQyadnxNoSACbgc/b1LsZYtODGoPiFxQrgJgjvw==}
@@ -6700,7 +6763,7 @@ snapshots:
   '@huggingface/transformers@3.0.2':
     dependencies:
       '@huggingface/jinja': 0.3.2
-      onnxruntime-node: 1.20.0
+      onnxruntime-node: 1.19.2
       onnxruntime-web: 1.21.0-dev.20241024-d9ca84ef96
       sharp: 0.33.5
 
@@ -6846,17 +6909,17 @@ snapshots:
   '@langchain/openai@0.3.17(@langchain/core@0.3.30(openai@4.73.0(zod@3.23.8)))':
     dependencies:
       '@langchain/core': 0.3.30(openai@4.73.0(zod@3.23.8))
-      js-tiktoken: 1.0.15
-      openai: 4.78.1(zod@3.23.8)
-      zod: 3.23.8
-      zod-to-json-schema: 3.24.1(zod@3.23.8)
+      js-tiktoken: 1.0.16
+      openai: 4.78.1(zod@3.24.1)
+      zod: 3.24.1
+      zod-to-json-schema: 3.24.1(zod@3.24.1)
     transitivePeerDependencies:
       - encoding
 
   '@langchain/textsplitters@0.1.0(@langchain/core@0.3.30(openai@4.73.0(zod@3.23.8)))':
     dependencies:
       '@langchain/core': 0.3.30(openai@4.73.0(zod@3.23.8))
-      js-tiktoken: 1.0.15
+      js-tiktoken: 1.0.16
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
@@ -7701,7 +7764,7 @@ snapshots:
 
   '@types/node-fetch@2.6.12':
     dependencies:
-      '@types/node': 18.19.70
+      '@types/node': 22.10.6
       form-data: 4.0.1
 
   '@types/node@10.17.60': {}
@@ -8856,7 +8919,7 @@ snapshots:
   fastembed@1.14.1:
     dependencies:
       '@anush008/tokenizers': 0.0.0
-      onnxruntime-node: 1.20.0
+      onnxruntime-node: 1.15.1
       progress: 2.0.3
       tar: 6.2.1
 
@@ -9563,7 +9626,7 @@ snapshots:
       '@langchain/core': 0.3.30(openai@4.73.0(zod@3.23.8))
       '@langchain/openai': 0.3.17(@langchain/core@0.3.30(openai@4.73.0(zod@3.23.8)))
       '@langchain/textsplitters': 0.1.0(@langchain/core@0.3.30(openai@4.73.0(zod@3.23.8)))
-      js-tiktoken: 1.0.15
+      js-tiktoken: 1.0.16
       js-yaml: 4.1.0
       jsonpointer: 5.0.1
       langsmith: 0.2.15(openai@4.73.0(zod@3.23.8))
@@ -9571,8 +9634,8 @@ snapshots:
       p-retry: 4.6.2
       uuid: 10.0.0
       yaml: 2.7.0
-      zod: 3.23.8
-      zod-to-json-schema: 3.24.1(zod@3.23.8)
+      zod: 3.24.1
+      zod-to-json-schema: 3.24.1(zod@3.24.1)
     optionalDependencies:
       axios: 1.7.9
       handlebars: 4.7.8
@@ -10056,9 +10119,22 @@ snapshots:
     dependencies:
       mimic-function: 5.0.1
 
+  onnxruntime-common@1.15.1: {}
+
+  onnxruntime-common@1.19.2: {}
+
   onnxruntime-common@1.20.0: {}
 
   onnxruntime-common@1.20.0-dev.20241016-2b8fc5529b: {}
+
+  onnxruntime-node@1.15.1:
+    dependencies:
+      onnxruntime-common: 1.15.1
+
+  onnxruntime-node@1.19.2:
+    dependencies:
+      onnxruntime-common: 1.19.2
+      tar: 7.4.3
 
   onnxruntime-node@1.20.0:
     dependencies:
@@ -10099,6 +10175,20 @@ snapshots:
       node-fetch: 2.7.0
     optionalDependencies:
       zod: 3.23.8
+    transitivePeerDependencies:
+      - encoding
+
+  openai@4.78.1(zod@3.24.1):
+    dependencies:
+      '@types/node': 18.19.70
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+    optionalDependencies:
+      zod: 3.24.1
     transitivePeerDependencies:
       - encoding
 
@@ -11380,6 +11470,33 @@ snapshots:
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
+
+  turbo-darwin-64@1.13.4:
+    optional: true
+
+  turbo-darwin-arm64@1.13.4:
+    optional: true
+
+  turbo-linux-64@1.13.4:
+    optional: true
+
+  turbo-linux-arm64@1.13.4:
+    optional: true
+
+  turbo-windows-64@1.13.4:
+    optional: true
+
+  turbo-windows-arm64@1.13.4:
+    optional: true
+
+  turbo@1.13.4:
+    optionalDependencies:
+      turbo-darwin-64: 1.13.4
+      turbo-darwin-arm64: 1.13.4
+      turbo-linux-64: 1.13.4
+      turbo-linux-arm64: 1.13.4
+      turbo-windows-64: 1.13.4
+      turbo-windows-arm64: 1.13.4
 
   tv4@1.3.0: {}
 
