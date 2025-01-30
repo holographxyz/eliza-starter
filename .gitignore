@@ -11,3 +11,6 @@ db.sqlite
 
 # model downloads
 *.gguf
+
+# misc
+.DS_Store
