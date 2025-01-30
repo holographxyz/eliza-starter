@@ -25,11 +25,16 @@
     "fs": "0.0.1-security",
     "net": "1.0.2",
     "path": "0.12.7",
-    "prettier": "^3.4.2",
     "readline": "1.3.0",
     "url": "0.11.4",
     "ws": "8.18.0",
     "yargs": "17.7.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "ts-node": "10.9.2",
+    "tsup": "8.3.5",
+    "typescript": "5.6.3"
   },
   "engines": {
     "node": ">=22"
@@ -38,10 +43,5 @@
     "overrides": {
       "onnxruntime-node": "1.20.0"
     }
-  },
-  "devDependencies": {
-    "ts-node": "10.9.2",
-    "tsup": "8.3.5",
-    "typescript": "5.6.3"
   }
 }
