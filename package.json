@@ -23,9 +23,5 @@
       "whatwg-url": "^14.0.0"
     }
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "packageManager": "pnpm@8.9.0"
 }
