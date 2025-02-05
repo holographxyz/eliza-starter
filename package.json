@@ -1,5 +1,5 @@
 {
-  "name": "eliza-monorepo",
+  "name": "gains-agents",
   "private": true,
   "scripts": {
     "build": "turbo run build",
