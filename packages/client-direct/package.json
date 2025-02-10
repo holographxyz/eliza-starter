@@ -1,6 +1,7 @@
 {
     "name": "@gains/client-direct",
-    "version": "0.1.8+build.1",
+    "version": "0.1.9-alpha.1",
+    "private": false,
     "main": "dist/index.js",
     "module": "dist/index.js",
     "type": "module",
@@ -20,8 +21,6 @@
     ],
     "dependencies": {
         "@elizaos/core": "0.1.9",
-        "@elizaos/plugin-image-generation": "0.1.9",
-        "@elizaos/plugin-tee-log": "0.1.9",
         "@types/body-parser": "1.19.5",
         "@types/cors": "2.8.17",
         "@types/express": "5.0.0",
