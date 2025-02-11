@@ -1,32 +1,35 @@
 import bodyParser from "body-parser";
 import cors from "cors";
-import express, { Request as ExpressRequest } from "express";
+import express, { type Request as ExpressRequest } from "express";
 import multer from "multer";
 import { z } from "zod";
 import {
-    AgentRuntime,
+    type AgentRuntime,
     elizaLogger,
     messageCompletionFooter,
     generateCaption,
     generateImage,
-    Media,
+    type Media,
     getEmbeddingZeroVector,
     composeContext,
     generateMessageResponse,
     generateObject,
-    Content,
-    Memory,
+    type Content,
+    type Memory,
     ModelClass,
-    Client,
+    type Client,
     stringToUuid,
     settings,
-    IAgentRuntime,
+    type IAgentRuntime,
 } from "@elizaos/core";
 import { createApiRouter } from "./api.ts";
-import { createN8nOpenAIRouter } from "./n8nOpenAI";
 import * as fs from "fs";
 import * as path from "path";
+// import { createVerifiableLogApiRouter } from "./verifiable-log-api.ts";
 import OpenAI from "openai";
+
+import { createN8nOpenAIRouter } from "./n8nOpenAI";
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -113,6 +116,8 @@ export class DirectClient {
     private agents: Map<string, AgentRuntime>; // container management
     private server: any; // Store server instance
     public startAgent: Function; // Store startAgent functor
+    public loadCharacterTryPath: Function; // Store loadCharacterTryPath functor
+    public jsonToCharacter: Function; // Store jsonToCharacter functor
 
     constructor() {
         elizaLogger.log("DirectClient constructor");
@@ -133,12 +138,15 @@ export class DirectClient {
             express.static(path.join(process.cwd(), "/generatedImages"))
         );
 
+        const apiRouter = createApiRouter(this.agents, this);
+        this.app.use(apiRouter);
+
+        // const apiLogRouter = createVerifiableLogApiRouter(this.agents);
+        // this.app.use(apiLogRouter);
+
         // Mount n8n OpenAI-compatible routes
         const openAIRouter = createN8nOpenAIRouter(this.agents, this);
         this.app.use("/n8n/openai", openAIRouter);
-
-        const apiRouter = createApiRouter(this.agents, this);
-        this.app.use(apiRouter);
 
         // Define an interface that extends the Express Request interface
         interface CustomRequest extends ExpressRequest {
@@ -188,12 +196,10 @@ export class DirectClient {
             }
         );
 
-
         this.app.post(
             "/:agentId/message",
             upload.single("file"),
             async (req: express.Request, res: express.Response) => {
-
                 const agentId = req.params.agentId;
                 const roomId = stringToUuid(
                     req.body.roomId ?? "default-room-" + agentId
@@ -216,14 +222,6 @@ export class DirectClient {
                     return;
                 }
 
-                console.log('runtime variables', {
-                    agentId,
-                    userId: userId,
-                    roomId,
-                    userName: req.body.userName,
-                    name: req.body.name,
-                    type: "direct",
-                })
                 await runtime.ensureConnection(
                     userId,
                     roomId,
@@ -565,38 +563,42 @@ export class DirectClient {
                         content: contentObj,
                     };
 
-                    runtime.messageManager.createMemory(responseMessage).then(() => {
-                          const messageId = stringToUuid(Date.now().toString());
-                          const memory: Memory = {
-                              id: messageId,
-                              agentId: runtime.agentId,
-                              userId,
-                              roomId,
-                              content,
-                              createdAt: Date.now(),
-                          };
+                    runtime.messageManager
+                        .createMemory(responseMessage)
+                        .then(() => {
+                            const messageId = stringToUuid(
+                                Date.now().toString()
+                            );
+                            const memory: Memory = {
+                                id: messageId,
+                                agentId: runtime.agentId,
+                                userId,
+                                roomId,
+                                content,
+                                createdAt: Date.now(),
+                            };
 
-                          // run evaluators (generally can be done in parallel with processActions)
-                          // can an evaluator modify memory? it could but currently doesn't
-                          runtime.evaluate(memory, state).then(() => {
-                            // only need to call if responseMessage.content.action is set
-                            if (contentObj.action) {
-                                // pass memory (query) to any actions to call
-                                runtime.processActions(
-                                    memory,
-                                    [responseMessage],
-                                    state,
-                                    async (_newMessages) => {
-                                        // FIXME: this is supposed override what the LLM said/decided
-                                        // but the promise doesn't make this possible
-                                        //message = newMessages;
-                                        return [memory];
-                                    }
-                                ); // 0.674s
-                            }
-                            resolve(true);
+                            // run evaluators (generally can be done in parallel with processActions)
+                            // can an evaluator modify memory? it could but currently doesn't
+                            runtime.evaluate(memory, state).then(() => {
+                                // only need to call if responseMessage.content.action is set
+                                if (contentObj.action) {
+                                    // pass memory (query) to any actions to call
+                                    runtime.processActions(
+                                        memory,
+                                        [responseMessage],
+                                        state,
+                                        async (_newMessages) => {
+                                            // FIXME: this is supposed override what the LLM said/decided
+                                            // but the promise doesn't make this possible
+                                            //message = newMessages;
+                                            return [memory];
+                                        }
+                                    ); // 0.674s
+                                }
+                                resolve(true);
+                            });
                         });
-                    });
                 });
                 res.json({ response: hfOut });
             }
@@ -752,8 +754,7 @@ export class DirectClient {
             if (!runtime) {
                 runtime = Array.from(this.agents.values()).find(
                     (a) =>
-                        a.character.name.toLowerCase() ===
-                        agentId.toLowerCase()
+                        a.character.name.toLowerCase() === agentId.toLowerCase()
                 );
             }
 
@@ -864,14 +865,14 @@ export class DirectClient {
                             process.env.ELEVENLABS_MODEL_ID ||
                             "eleven_multilingual_v2",
                         voice_settings: {
-                            stability: parseFloat(
+                            stability: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STABILITY || "0.5"
                             ),
-                            similarity_boost: parseFloat(
+                            similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
                                     "0.9"
                             ),
-                            style: parseFloat(
+                            style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
                             ),
                             use_speaker_boost:
@@ -938,14 +939,14 @@ export class DirectClient {
                             process.env.ELEVENLABS_MODEL_ID ||
                             "eleven_multilingual_v2",
                         voice_settings: {
-                            stability: parseFloat(
+                            stability: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STABILITY || "0.5"
                             ),
-                            similarity_boost: parseFloat(
+                            similarity_boost: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_SIMILARITY_BOOST ||
                                     "0.9"
                             ),
-                            style: parseFloat(
+                            style: Number.parseFloat(
                                 process.env.ELEVENLABS_VOICE_STYLE || "0.66"
                             ),
                             use_speaker_boost:
@@ -994,19 +995,21 @@ export class DirectClient {
         this.agents.delete(runtime.agentId);
     }
 
-    public start(port: number) {
-        this.server = this.app.listen(port, () => {
-            elizaLogger.success(
-                `REST API bound to 0.0.0.0:${port}. If running locally, access it at http://localhost:${port}.`
-            );
-        });
+  public start(port: number) {
+    elizaLogger.warn("--- client direct start fn start...");
+    this.server = this.app.listen(port, () => {
+      elizaLogger.warn("--- server has started!");
+      elizaLogger.success(
+        `REST API bound to 0.0.0.0:${port}. If running locally, access it at http://localhost:${port}.`
+      );
+    });
 
-        // Handle graceful shutdown
-        const gracefulShutdown = () => {
-            elizaLogger.log("Received shutdown signal, closing server...");
-            this.server.close(() => {
-                elizaLogger.success("Server closed successfully");
-                process.exit(0);
+    // Handle graceful shutdown
+    const gracefulShutdown = () => {
+      elizaLogger.warn("Received shutdown signal, closing server...");
+      this.server.close(() => {
+        elizaLogger.warn("Server closed successfully");
+                  process.exit(0);
             });
 
             // Force close after 5 seconds if server hasn't closed
@@ -1020,7 +1023,9 @@ export class DirectClient {
 
         // Handle different shutdown signals
         process.on("SIGTERM", gracefulShutdown);
-        process.on("SIGINT", gracefulShutdown);
+    process.on("SIGINT", gracefulShutdown);
+    
+    elizaLogger.warn("--- client direct start fn end ...");
     }
 
     public stop() {
@@ -1036,7 +1041,7 @@ export const DirectClientInterface: Client = {
     start: async (_runtime: IAgentRuntime) => {
         elizaLogger.log("DirectClientInterface start");
         const client = new DirectClient();
-        const serverPort = parseInt(settings.SERVER_PORT || "3000");
+        const serverPort = Number.parseInt(settings.SERVER_PORT || "3000");
         client.start(serverPort);
         return client;
     },
