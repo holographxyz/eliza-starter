@@ -1,4 +1,3 @@
-// import { DirectClient } from "@elizaos/client-direct";
 import { DirectClient } from "@gains/client-direct";
 import {
   AgentRuntime,

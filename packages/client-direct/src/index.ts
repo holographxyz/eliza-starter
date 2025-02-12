@@ -836,10 +836,8 @@ export class DirectClient {
   }
 
   public start(port: number) {
-    elizaLogger.warn('--- client direct start fn start...');
     this.server = this.app.listen(port, () => {
-      elizaLogger.warn('--- server has started!');
-      elizaLogger.success(
+      elizaLogger.info(
         `REST API bound to 0.0.0.0:${port}. If running locally, access it at http://localhost:${port}.`,
       );
     });
@@ -862,8 +860,6 @@ export class DirectClient {
     // Handle different shutdown signals
     process.on('SIGTERM', gracefulShutdown);
     process.on('SIGINT', gracefulShutdown);
-
-    elizaLogger.warn('--- client direct start fn end ...');
   }
 
   public stop() {
